@@ -1,0 +1,40 @@
+body {
+    background-color: #495464;
+    color: #f4f4f2;
+}
+
+.title {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.blocks {
+    margin-top: 88px;
+    background-color: #bbbfca;
+}
+
+.blocks_title {
+    padding: 20px;
+}
+
+#side_menu a {
+    color: #bbbfca;
+    transition: all 0.2s ease-in-out;
+}
+
+#side_menu a:hover {
+    background-color: #e8e8e8;
+    color: #bbbbbe;
+    border-radius: 4px;
+}
+
+#side_menu .active a {
+    background-color: #e8e8e8;
+    color: #bbbbbe;
+    border-radius: 4px;
+}
+
+.admin_addBtn a {
+    color: #bbbfca;
+    text-decoration: none;
+}
