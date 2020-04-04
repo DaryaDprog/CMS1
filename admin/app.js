@@ -1,14 +1,6 @@
 $(document).ready(function () {
 
 
-    // function slideout(){
-    //     setTimeout(function () {
-    //         $("#response").slideUp("slow", function(){
-    //
-    //         });
-    //     },2000);
-    // }
-    // $("#response").hide();
     $(function () {
         $("#table tbody").sortable({
             opacity: 0.8, cursor: 'move', update: function (event, ui) {
@@ -20,12 +12,6 @@ $(document).ready(function () {
                 });
 
                 saveNewPositions();
-                // var order = $(this).sortable("serialize") + '&update=update';
-                // $.post("updateList.php", order, function(theResponse) {
-                //     $("#response").html(theResponse);
-                //     $("#response").slideDown('slow');
-                //     slideout();
-                // });
             }
         });
     });

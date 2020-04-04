@@ -23,18 +23,46 @@ class Blocks
         return $query->fetch();
     }
 
-    public function newTable()
+    public function addPageName()
     {
         global $pdo;
         $pageName = $_POST['pageName'];
-        $sql = "CREATE TABLE `$pageName`(
-                         `Block_id` INT( 11 ) AUTO_INCREMENT PRIMARY KEY,
-                         `Block_title` VARCHAR( 255 ) NOT NULL, 
-                         `Block_img` VARCHAR( 255 ) NOT NULL,
-                         `Block_content` VARCHAR( 10000 ) NOT NULL, 
-                         `Block_order` INT( 11 ) NOT NULL)";
-        $pdo->exec($sql);
+
+        $query = $pdo->prepare('INSERT INTO category (cat_name) VALUES (?)');
+        $query->bindValue(1, $pageName);
+        $query->execute();
+
     }
+
+    public function selectPage()
+    {
+        global $pdo;
+        $query = $pdo->prepare('SELECT * FROM category');
+        $query->execute();
+        return $query->fetchAll();
+    }
+
+    public function fetch_page($cat_name)
+    {
+        global $pdo;
+        $query = $pdo->prepare('SELECT * FROM category WHERE cat_name = ?');
+        $query->bindValue(1, $cat_name);
+        $query->execute();
+        return $query->fetch();
+    }
+
+//    public function newTable()
+//    {
+//        global $pdo;
+//        $pageName = $_POST['pageName'];
+//        $sql = "CREATE TABLE `$pageName`(
+//                         `Block_id` INT( 11 ) AUTO_INCREMENT PRIMARY KEY,
+//                         `Block_title` VARCHAR( 255 ) NOT NULL,
+//                         `Block_img` VARCHAR( 255 ) NOT NULL,
+//                         `Block_content` VARCHAR( 10000 ) NOT NULL,
+//                         `Block_order` INT( 11 ) NOT NULL)";
+//        $pdo->exec($sql);
+//    }
 }
 
 ?>

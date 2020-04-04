@@ -2,23 +2,30 @@
 session_start();
 
 include_once('../includes/connection.php');
+include_once('../includes/blocks.php');
+
+$block = new Blocks;
+$select = $block->selectPage();
 
 if (isset($_SESSION['logged_in'])) {
     if (isset($_POST['title'], $_POST['content'])) {
+        $page = $_POST['cat'];
         $title = $_POST['title'];
         $img = $_FILES['img']['name'];
         $content = $_POST['content'];
         $order = $_POST['order'];
         $target = '../Uploads/' . basename($_FILES['img']['name']);
 
+
         if (empty($title) or empty($content)) {
             $error = 'Все поля должны быть заполнены';
         } else {
-            $query = $pdo->prepare('INSERT INTO Block (Block_title, Block_img, Block_content, Block_order) VALUES (?, ?, ?, ?)');
+            $query = $pdo->prepare('INSERT INTO Block (Block_title, Block_img, Block_content, Block_order, Block_cat) VALUES (?, ?, ?, ?,? )');
             $query->bindValue(1, $title);
             $query->bindValue(2, $img);
             $query->bindValue(3, $content);
             $query->bindValue(4, $order);
+            $query->bindValue(5, $page);
             $query->execute();
             move_uploaded_file($_FILES['img']['tmp_name'], $target);
             header('Location: admin.php');
@@ -67,6 +74,15 @@ if (isset($_SESSION['logged_in'])) {
                 <form action="add.php" method="post" autocomplete="off" enctype="multipart/form-data">
                     <div class="form-group col-lg-2">
                         <input type="number" name="order" class="form-control">
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label for="selectpage"></label>
+                        <select name="cat" id="selectpage">
+                            <?php
+                            foreach ($select as $s) { ?>
+                                <option><?php echo $s['cat_name']; ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
                     <div class="form-group col-lg-5">
                         <input type="text" name="title" placeholder="Title" class="form-control">

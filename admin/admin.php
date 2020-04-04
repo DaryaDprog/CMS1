@@ -5,7 +5,7 @@ session_start();
 
 include_once('../includes/connection.php');
 include_once('../includes/blocks.php');
-include_once('../includes/functions.php');
+//include_once('../includes/functions.php');
 
 
 $block = new Blocks;
@@ -53,8 +53,14 @@ if (isset($_SESSION['logged_in'])) {
             $errorPage = "Только латинские буквы";
         } else {
 
-            copyFolder("../default", "../" . $pageName . "admin");
-            $page->newTable();
+
+            $block->addPageName();
+            $file = '../spb.php';
+            $newfile = '../' . $pageName . '.php';
+
+            copy($file, $newfile);
+//            copyFolder("../default", "../" . $pageName . "admin");
+//            $page->newTable();
 
 
 //            $sql ="CREATE TABLE `$pageName`(
@@ -68,6 +74,7 @@ if (isset($_SESSION['logged_in'])) {
             header('Location: admin.php');
         }
     }
+
 
     ?>
     <!doctype html>
@@ -93,9 +100,19 @@ if (isset($_SESSION['logged_in'])) {
                 <h1 class="title">AdminPanel</h1>
                 <ul id="side_menu" class="nav flex-column">
                     <li class="nav-item active"><a class="nav-link" href="admin.php">Главная</a></li>
-                    <li class="nav-item"><a class="nav-link" href="spb.php">СПБ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="msc.php">Мск</a></li>
+                    <?php
+                    $sth = $pdo->prepare("SELECT cat_name FROM category");
+                    $sth->execute();
+                    $array = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+                    foreach ($array as $arr) {
+                        foreach ($arr as $k => $v) {
+                            echo '<li class="nav-item"><a class="nav-link" href="../' . $v . '.php?id=' . $v . '">' . $v . '</a></li>';
+                        }
+                    } ?>
                     <li class="nav-item"><a class="nav-link" href="logout.php">Log out</a></li>
+
+
                 </ul>
                 <br><br>
 
@@ -144,6 +161,7 @@ if (isset($_SESSION['logged_in'])) {
                         <thead class="thead-dark">
                         <tr>
                             <th>No</th>
+                            <th>Page Name</th>
                             <th>Title</th>
                             <th>Img</th>
                             <th>Content</th>
@@ -161,11 +179,12 @@ if (isset($_SESSION['logged_in'])) {
                         <tr data-index="<?php echo $block['Block_id']; ?>"
                             data-position="<?php echo $block['Block_order']; ?>">
                             <td><?php echo $block['Block_order']; ?></td>
+                            <td><?php echo $block['Block_cat']; ?></td>
                             <td><?php echo $block['Block_title']; ?></td>
                             <td><img src="../Uploads/<?php echo $block['Block_img']; ?>" width="80" alt="/"></td>
                             <td>
-                                <?php if (strlen($block['Block_content']) > 40) {
-                                    $block['Block_content'] = substr($block['Block_content'], 0, 40) . '...';
+                                <?php if (strlen($block['Block_content']) > 30) {
+                                    $block['Block_content'] = substr($block['Block_content'], 0, 30) . '...';
                                 }
                                 echo $block['Block_content']; ?>
                             </td>
