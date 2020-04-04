@@ -51,18 +51,6 @@ class Blocks
         return $query->fetch();
     }
 
-//    public function newTable()
-//    {
-//        global $pdo;
-//        $pageName = $_POST['pageName'];
-//        $sql = "CREATE TABLE `$pageName`(
-//                         `Block_id` INT( 11 ) AUTO_INCREMENT PRIMARY KEY,
-//                         `Block_title` VARCHAR( 255 ) NOT NULL,
-//                         `Block_img` VARCHAR( 255 ) NOT NULL,
-//                         `Block_content` VARCHAR( 10000 ) NOT NULL,
-//                         `Block_order` INT( 11 ) NOT NULL)";
-//        $pdo->exec($sql);
-//    }
 }
 
 ?>
