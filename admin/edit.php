@@ -5,12 +5,14 @@ include_once('../includes/connection.php');
 include_once('../includes/blocks.php');
 
 $block = new Blocks;
+$select = $block->selectPage();
 
 if (isset($_GET['edit'])) {
     $edit = $_GET['edit'];
     $data = $block->fetch_data($edit);
 
     if (isset($_POST['title'], $_POST['content'])) {
+        $page = $_POST['cat'];
         $title = $_POST['title'];
         $img = $_FILES['img']['name'];
         $content = $_POST['content'];
@@ -20,10 +22,11 @@ if (isset($_GET['edit'])) {
             $error = 'Все поля должны быть заполнены';
         } else {
 
-            $query = "UPDATE Block SET Block_title = '$title', Block_img = '$img',Block_content = '$content'  WHERE Block_id = '$edit'";
+            $query = "UPDATE Block SET Block_title = '$title', Block_cat = '$page', Block_img = '$img',Block_content = '$content'  WHERE Block_id = '$edit'";
             $params = [
                 'Block_id' => $edit,
                 'Block_title' => $title,
+                'Block_cat' => $page,
                 'Block_img' => $img,
                 'Block_content' => $content
             ];
@@ -59,10 +62,17 @@ if (isset($_GET['edit'])) {
             <div class="col-sm-2">
                 <h1 class="title">AdminPanel</h1>
                 <ul id="side_menu" class="nav flex-column">
-                    <li class="nav-item active"><a class="nav-link" href="index.php">Главная</a></li>
-                    <li class="nav-item"><a class="nav-link" href="spb.php">СПБ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="msc.php">Мск</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Log out</a></li>
+                    <?php
+                    $sth = $pdo->prepare("SELECT cat_name FROM category");
+                    $sth->execute();
+                    $array = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+                    foreach ($array as $arr) {
+                        foreach ($arr as $k => $v) {
+                            echo '<li class="nav-item"><a class="nav-link" href="../index.php?page=' . $v . '">' . $v . '</a></li>';
+                        }
+                    } ?>
+                    <li class="nav-item"><a class="nav-link" href="logout.php">Log out</a></li>
                 </ul>
             </div>
             <div class="blocks col-sm-10">
@@ -70,6 +80,16 @@ if (isset($_GET['edit'])) {
 
                 <form action="edit.php?edit=<?php echo $edit; ?>" method="post" autocomplete="off"
                       enctype="multipart/form-data">
+
+                    <div class="form-group col-lg-2">
+                        <label for="selectpage"></label>
+                        <select class="custom-select" name="cat" id="selectpage">
+                            <?php foreach ($select as $s) { ?>
+                                <option><?php echo $s['cat_name']; ?></option>
+                            <?php } ?>
+
+                        </select>
+                    </div>
                     <div class="form-group col-lg-5">
                         <input value="<?php echo $data['Block_title']; ?>" type="text" name="title" placeholder="Title"
                                class="form-control">

@@ -3,7 +3,6 @@ include_once('includes/connection.php');
 include_once('includes/blocks.php');
 
 $block = new Blocks;
-$blocks = $block->fetch_all();
 
 $sql = 'SELECT * FROM meta';
 $statment = $pdo->query($sql);
@@ -30,7 +29,7 @@ $metas = $statment->fetchAll(PDO::FETCH_ASSOC);
     <?php } ?>
 
 
-    <title>Admin</title>
+    <title>CourseBurg</title>
 </head>
 <body>
 
@@ -39,19 +38,32 @@ $metas = $statment->fetchAll(PDO::FETCH_ASSOC);
         <div class="col-sm-2">
             <h2 class="title">CourseBurg</h2>
             <ul id="side_menu" class="nav flex-column">
-                <li class="nav-item active"><a class="nav-link" href="index.php">Главная</a></li>
-                <li class="nav-item"><a class="nav-link" href="spb.php">СПБ</a></li>
-                <li class="nav-item"><a class="nav-link" href="msc.php">Мск</a></li>
+                <?php
+                $sth = $pdo->prepare("SELECT cat_name FROM category");
+                $sth->execute();
+                $array = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($array as $arr) {
+                    foreach ($arr as $k => $v) {
+                        echo '<li class="nav-item"><a class="nav-link" href="index.php?page=' . $v . '">' . $v . '</a></li>';
+                    }
+                } ?>
                 <li class="nav-item"><a class="nav-link" href="admin/admin.php">Log in</a></li>
             </ul>
         </div>
         <div class="blocks col-sm-10">
-            <h2>Блоки</h2>
-            <?php foreach ($blocks as $block) { ?>
-                <h1><?php echo $block['Block_title']; ?></h1>
-                <img src="Uploads/<?php echo $block['Block_img']; ?>" width="300" alt="/">
-                <p><?php echo $block['Block_content']; ?></li></p>
-            <?php } ?>
+            <?php
+            $cat_name = $_GET['page'];
+            echo '<h2>' . $cat_name . '</h2>';
+
+            $query = $pdo->query("SELECT * FROM Block WHERE Block_cat = '$cat_name' ORDER BY Block_order");
+            while ($block = $query->fetch(PDO::FETCH_OBJ)) {
+                echo '<h1>' . $block->Block_title . '</h1>';
+                echo '<img src="Uploads/' . $block->Block_img . ' " width="300" alt="/">';
+
+                echo '<p>' . $block->Block_content . '</p>';
+
+            } ?>
 
         </div>
     </div>

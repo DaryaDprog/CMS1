@@ -5,7 +5,6 @@ session_start();
 
 include_once('../includes/connection.php');
 include_once('../includes/blocks.php');
-//include_once('../includes/functions.php');
 
 
 $block = new Blocks;
@@ -55,10 +54,6 @@ if (isset($_SESSION['logged_in'])) {
 
 
             $block->addPageName();
-            $file = '../spb.php';
-            $newfile = '../' . $pageName . '.php';
-
-            copy($file, $newfile);
             header('Location: admin.php');
         }
     }
@@ -85,9 +80,8 @@ if (isset($_SESSION['logged_in'])) {
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-2">
-                <h1 class="title">AdminPanel</h1>
+                <h1 class="title"><a href="admin.php">AdminPanel</a></h1>
                 <ul id="side_menu" class="nav flex-column">
-                    <li class="nav-item active"><a class="nav-link" href="admin.php">Главная</a></li>
                     <?php
                     $sth = $pdo->prepare("SELECT cat_name FROM category");
                     $sth->execute();
@@ -95,7 +89,7 @@ if (isset($_SESSION['logged_in'])) {
 
                     foreach ($array as $arr) {
                         foreach ($arr as $k => $v) {
-                            echo '<li class="nav-item"><a class="nav-link" href="../' . $v . '.php?id=' . $v . '">' . $v . '</a></li>';
+                            echo '<li class="nav-item"><a class="nav-link" href="../index.php?page=' . $v . '">' . $v . '</a></li>';
                         }
                     } ?>
                     <li class="nav-item"><a class="nav-link" href="logout.php">Log out</a></li>
@@ -180,7 +174,7 @@ if (isset($_SESSION['logged_in'])) {
                             </td>
                             <td><a class="btn btn-warning" href="delete.php?delete=<?php echo $block['Block_id']; ?>">Удалить</a>
                             </td>
-                            <td><a class="btn btn-primary" href="../index.php?id=<?php echo $block['Block_id']; ?>"
+                            <td><a class="btn btn-primary" href="../index.php?page=<?php echo $block['Block_cat']; ?>"
                                    target="_blank">Посмотреть блок</a></td>
 
                             <?php } ?>

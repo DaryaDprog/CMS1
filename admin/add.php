@@ -55,10 +55,17 @@ if (isset($_SESSION['logged_in'])) {
             <div class="col-sm-2">
                 <h1 class="title">AdminPanel</h1>
                 <ul id="side_menu" class="nav flex-column">
-                    <li class="nav-item active"><a class="nav-link" href="index.php">Главная</a></li>
-                    <li class="nav-item"><a class="nav-link" href="spb.php">СПБ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="msc.php">Мск</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Log out</a></li>
+                    <?php
+                    $sth = $pdo->prepare("SELECT cat_name FROM category");
+                    $sth->execute();
+                    $array = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+                    foreach ($array as $arr) {
+                        foreach ($arr as $k => $v) {
+                            echo '<li class="nav-item"><a class="nav-link" href="../index.php?page=' . $v . '">' . $v . '</a></li>';
+                        }
+                    } ?>
+                    <li class="nav-item"><a class="nav-link" href="logout.php">Log out</a></li>
                 </ul>
             </div>
             <div class="blocks col-sm-8">
@@ -77,7 +84,7 @@ if (isset($_SESSION['logged_in'])) {
                     </div>
                     <div class="form-group col-lg-2">
                         <label for="selectpage"></label>
-                        <select name="cat" id="selectpage">
+                        <select class="custom-select" name="cat" id="selectpage">
                             <?php
                             foreach ($select as $s) { ?>
                                 <option><?php echo $s['cat_name']; ?></option>
